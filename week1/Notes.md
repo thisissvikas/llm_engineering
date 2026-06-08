@@ -79,3 +79,64 @@ When running open-weight models locally, developers generally choose between two
 ## 5. Key Glossary Term
 
 - **Inference:** A technical term for _running_ an AI model. It is the process of passing a new input (prompt) into a trained neural network to compute and generate an output.
+
+Here is a highly condensed, quick-reference summary of the lecture notes:
+
+# Lecture Notes: LLM Types & Frontier Models
+
+### Core Concepts
+
+- **The Big Picture:** AI models have transitioned from basic text predictors to highly conversational, analytical assistants. However, they lack macro-level judgment and optimize for _plausibility_, meaning they require human oversight.
+
+---
+
+### The Three Breeds of LLMs
+
+1. **Base Models:**
+
+- _What they do:_ Predict the next most likely word in a text sequence (like smartphone predictive text).
+- _Best use:_ The foundational starting point for training a model on entirely new skills.
+
+2. **Chat / Instruct Models:**
+
+- _What they do:_ Trained via **RLHF** (Reinforcement Learning from Human Feedback) to follow conversational structures using _System Prompts_, _User Prompts_, and _Assistant Replies_.
+- _Best use:_ Fast, interactive communication and fluid content generation (e.g., writing emails).
+
+3. **Reasoning / Thinking Models:**
+
+- _What they do:_ Trained to output a step-by-step "thinking trace" before delivering an answer (born from the "Chain of Thought" prompt trick).
+- _Best use:_ Complex logic, math, and heavy troubleshooting.
+
+> **Hybrid Models:** Modern frontier models (e.g., GPT-5, Gemini 2.5) are hybrids. They dynamically adjust their **reasoning budget**. They skip thinking for a simple _"Hello,"_ but pause to think deeply when handed a complex riddle.
+> **Budget Forcing (The S1 Paper):** A 2025 discovery showed that simply injecting the word _"Wait"_ into a model's internal thinking trace forces it to pause, self-reflect, and correct its own analytical mistakes.
+
+---
+
+### The Frontier Model Landscape
+
+- **OpenAI:** GPT-5 (hybrid), O-series (pure reasoning), and GPT 4.1 (preferred by the lecturer for fast, interactive chat).
+- **Anthropic:** Claude (Haiku, Sonnet 4.5, and Opus).
+- **Google:** Gemini (v2.5 hybrid, v3 anticipated).
+- **x.AI:** Grok.
+- **DeepSeek:** Disrupted the industry by open-sourcing its most powerful models (prompting OpenAI to release its own open-source model, OSS).
+
+---
+
+### Strengths vs. Risks
+
+#### The Good
+
+- Incredibly strong at summarizing text, synthesizing data, and creating project frameworks.
+- Has heavily supplanted platforms like Stack Overflow for writing and debugging code.
+
+#### The Bad & Dangerous
+
+- **Knowledge Cutoffs:** The core model cannot see past its training date. Extra wrapping code handles live web searches, not the LLM itself.
+- **Confident Hallucinations:** Because they are trained to sound authoritative, they will state completely false information with absolute conviction.
+- **The "Band-Aid" Bias:** They try to fix local errors by adding layers of complexity rather than stepping back to see if the entire premise is wrong.
+
+---
+
+### 💡 Golden Rule of LLMs
+
+> Treat an LLM like a **tireless, brilliant, but blind junior analyst**. They will do immense amounts of work for you, but you must strictly supervise them, check their work, and keep them on the rails so they don't confidently lead you down a rabbit hole.
