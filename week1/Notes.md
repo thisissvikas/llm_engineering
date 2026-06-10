@@ -264,7 +264,7 @@ Example pricing (GPT-5):
 
 **Caching**: sending the same inputs repeatedly within a short window is cheaper. Claude supports explicit prompt caching; GPT does it automatically.
 
-Useful reference: [Vellum Leaderboard](https://vellum.ai/leaderboard) — compares context windows and API costs across major models.
+Useful reference: [Vellum Leaderboard](https://www.vellum.ai/llm-leaderboard) — compares context windows and API costs across major models.
 
 ---
 
