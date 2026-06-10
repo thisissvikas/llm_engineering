@@ -140,3 +140,137 @@ Here is a highly condensed, quick-reference summary of the lecture notes:
 ### 💡 Golden Rule of LLMs
 
 > Treat an LLM like a **tireless, brilliant, but blind junior analyst**. They will do immense amounts of work for you, but you must strictly supervise them, check their work, and keep them on the rails so they don't confidently lead you down a rabbit hole.
+
+# Lecture Notes: LLM & Transformers
+
+## What is GPT?
+
+**G**enerative **P**re-trained **T**ransformer. Generates tokens (predicts what comes next), trained on massive internet-scraped data, built on the transformer architecture.
+
+## The Transformer Architecture
+
+### Origin: "Attention is All You Need" (2017)
+
+A landmark Google paper describing a new neural network architecture. The authors didn't realize the magnitude of their discovery — they saw it as an optimization, not a revolution.
+
+### Background: Neural Networks
+
+- Traditional ML models: 20–200 parameters, statistical predictions from structured data
+- Neural networks (1950s concept): many interconnected "artificial neurons," loosely inspired by the brain
+- Deep learning: stacking more layers → deeper networks → better pattern recognition
+
+### What Made Transformers Special
+
+The transformer introduced a **self-attention layer** — a mechanism that figures out which parts of an input sequence matter most. Key advantages over predecessors like LSTMs:
+
+- Massively parallelizable (LSTMs had to process step-by-step)
+- Scales efficiently with more data and parameters
+- Simpler than LSTMs, yet more practically powerful due to scalability
+
+The LSTM was arguably more theoretically expressive, but couldn't be parallelized efficiently — the transformer's simplicity was its superpower.
+
+### GPT Timeline
+
+| Year | Model             | Notes                                 |
+| ---- | ----------------- | ------------------------------------- |
+| 2018 | GPT-1             | 117M parameters, basic                |
+| 2019 | GPT-2             | 1.5B parameters                       |
+| 2020 | GPT-3             | 175B parameters                       |
+| 2022 | ChatGPT (GPT-3.5) | Added RLHF for chat-style interaction |
+| 2023 | GPT-4             | ~1.76T parameters                     |
+| 2024 | GPT-4o            | Multimodal                            |
+
+### Transformer Not Fundamental — Just Efficient
+
+Alternative architectures exist (state space, hybrid). None have definitively beaten transformers yet, but the transformer isn't considered the only possible path — it's the most efficient one found so far.
+
+---
+
+## Emergent Intelligence
+
+A surprising byproduct of scale: large enough models don't just produce _plausible_ tokens — they produce _accurate_, _intelligent_ ones. Predicting realistic text is expected; actually solving math problems correctly is not. This property — **emergent intelligence** — is still not fully understood.
+
+---
+
+## Parameters
+
+The "weights" a model learns during training. More parameters → more capacity to absorb training data.
+
+| Model                     | Parameters               |
+| ------------------------- | ------------------------ |
+| GPT-1                     | 117M                     |
+| GPT-2                     | 1.5B                     |
+| GPT-3                     | 175B                     |
+| GPT-4                     | ~1.76T                   |
+| DeepSeek                  | 671B                     |
+| Frontier models (current) | Likely tens of trillions |
+
+Efficiency has improved — Gemma at 270M parameters outperforms GPT-2 at 1.5B. Model "flavors" (e.g., Claude Haiku / Sonnet / Opus) represent small, medium, and large parameter counts.
+
+### Training Time vs. Inference Time Scaling
+
+- **Training time scaling**: bigger model, more parameters, more training data
+- **Inference time scaling**: getting more out of a model at runtime — e.g., chain-of-thought reasoning, RAG, richer context (prompt engineering / context engineering)
+
+Both tracks are now actively pursued in parallel.
+
+---
+
+## Tokens
+
+The unit of input/output for LLMs — not characters, not full words, but _chunks_ (word fragments, whole words, or common word pairs).
+
+### Why Tokens?
+
+- Characters: too granular, network had to learn too much
+- Full words: vocabulary explodes with proper nouns and rare words
+- Tokens: efficient middle ground — limited vocab, captures meaningful word fragments
+
+### Token Rules of Thumb
+
+- ~4 characters per token
+- ~750 words per 1,000 tokens
+- Complete Works of Shakespeare ≈ 1.2M tokens
+- Code is denser — closer to 1 token per character
+
+Tokens include a "beginning of word" marker — `important` (start of word) and `crafted` (word ending) are treated differently.
+
+---
+
+## Context Window
+
+The maximum number of tokens a model can consider at once — includes the **entire conversation history**, not just the latest message. Output tokens are also generated one at a time, fed back into the input.
+
+| Model               | Context Window |
+| ------------------- | -------------- |
+| GPT-5               | 400K tokens    |
+| Claude (range)      | 200K tokens    |
+| GPT-o (open source) | ~130K tokens   |
+| Gemini 2.5 Flash    | 1M tokens      |
+
+Relevant for techniques like multi-shot prompting and RAG, both of which rely heavily on context window capacity.
+
+---
+
+## API Costs
+
+Charged per **input tokens** (full conversation history) and **output tokens** (including hidden reasoning traces for reasoning models).
+
+Example pricing (GPT-5):
+
+- Input: $1.25 / 1M tokens
+- Output: $10 / 1M tokens
+- GPT-5 Nano output: $0.40 / 1M tokens
+
+**Caching**: sending the same inputs repeatedly within a short window is cheaper. Claude supports explicit prompt caching; GPT does it automatically.
+
+Useful reference: [Vellum Leaderboard](https://vellum.ai/leaderboard) — compares context windows and API costs across major models.
+
+---
+
+## Evolution of the Field
+
+- **Prompt engineering** → briefly a high-paying job title, now universal skill
+- **Copilots** (GitHub, Microsoft) → human-AI collaboration on documents and code
+- **Context engineering** → the new prompt engineering; thinking holistically about what information to give the model, including tools and structured data
+- **Agentic AI** → LLM in a loop with tools, controlling its own workflow; exemplified by Claude Code
