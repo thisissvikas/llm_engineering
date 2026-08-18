@@ -1,3 +1,55 @@
+Sure — let's build this up from scratch with simple analogies.
+
+## What is an LLM actually doing?
+
+At its core, an LLM (Large Language Model) is a very sophisticated **autocomplete**. Given some text, it predicts the most likely next word, then the next, and so on. The "transformer" is the specific design (architecture) that makes this prediction so powerful.Let's build this up from scratch, one idea at a time.
+
+## Step 1: What is an LLM trying to do?
+
+Imagine a friend who has read _almost everything on the internet_. If you say "The sky is..." they'll instinctively guess "blue" — not because they memorized that exact sentence, but because they've seen the pattern so many times.
+
+That's essentially what an LLM does: it predicts **the most likely next word**, over and over, to generate text. The "transformer" is the specific design that makes this prediction so good.
+
+## Step 2: Breaking a sentence into pieces (tokens)
+
+Before the model can "think" about text, it chops it into small pieces called **tokens** — usually words or word-chunks. For example:
+
+> "I love pizza" → `["I", "love", "piz", "za"]`
+
+Each token then gets converted into a list of numbers (a **vector**) that represents its meaning. Think of it like a GPS coordinate — but instead of location on Earth, it's a "location" in meaning-space, where similar words end up near each other.
+
+## Step 3: The key idea — attention
+
+Here's the breakthrough that makes transformers special: **every word looks at every other word in the sentence and decides how relevant it is.**
+
+Take the sentence: _"The cat sat on the mat because it was tired."_
+
+When the model processes the word **"it"**, how does it know "it" refers to the _cat_ and not the _mat_? It does this by having "it" look at every other word and assign an **attention score** — basically a relevance weight. "Cat" gets a high score, "mat" gets a low one.This is called **self-attention**, and it happens for _every_ word, not just "it" — each word is constantly re-evaluating how much it should care about every other word. This is what lets the model understand context, grammar, and meaning all at once, instead of reading word-by-word in isolation like older AI models did.
+
+## Step 4: Doing this many times, from many angles
+
+The model doesn't just do this attention trick once — it does it **many times in parallel**, each time focusing on a different kind of relationship (one might track grammar, another might track "who is doing what to whom"). These are called **attention heads**. Their combined insights are then blended together.
+
+## Step 5: Stacking many layers
+
+One round of "look around and update your understanding" isn't enough for deep comprehension. So this whole process — attention, then a bit of extra number-crunching (called a **feed-forward step**) — is stacked **dozens of times**, like layers of a cake. Each layer refines the understanding a little further, building from simple patterns (grammar) to complex ones (tone, reasoning, intent).
+
+## Step 6: Predicting the next word
+
+After passing through all the layers, the model has a rich understanding of the entire sentence so far. The very last step converts this understanding into a **probability for every possible next word** — and it picks one (usually the most likely, sometimes with a bit of randomness for creativity). Then the whole process repeats for the _next_ word, and the next, until the response is complete.
+
+## Putting it all together
+
+| Step         | What happens                         | Analogy                                                   |
+| ------------ | ------------------------------------ | --------------------------------------------------------- |
+| Tokenize     | Split text into pieces               | Chopping a sentence into puzzle pieces                    |
+| Embed        | Turn pieces into numbers             | Giving each piece GPS coordinates in "meaning space"      |
+| Attention    | Words check relevance of other words | Everyone in a room briefly checking who's talking to whom |
+| Stack layers | Repeat and refine understanding      | Editing a draft multiple times, each pass adding polish   |
+| Predict      | Guess the next word                  | Finishing someone's sentence based on context             |
+
+That's the core idea — the "magic" of transformers isn't really magic, it's **attention done at massive scale**, repeated many times, trained on huge amounts of text.
+
 # Lecture Notes: Introduction to LLMs and Inference
 
 ## 1. Closed-Source vs. Open-Source Models
@@ -274,3 +326,47 @@ Useful reference: [Vellum Leaderboard](https://www.vellum.ai/llm-leaderboard) �
 - **Copilots** (GitHub, Microsoft) → human-AI collaboration on documents and code
 - **Context engineering** → the new prompt engineering; thinking holistically about what information to give the model, including tools and structured data
 - **Agentic AI** → LLM in a loop with tools, controlling its own workflow; exemplified by Claude Code
+
+# The Transformer Architecture
+
+The transformer is the foundation of modern LLMs (GPT, Claude, etc.), introduced in _"Attention Is All You Need"_ (2017). It processes sequences using **self-attention** instead of recurrence, allowing full parallelization.
+
+## Core Components
+
+**1. Input Embeddings**
+Tokens (words/subwords) are converted into dense vectors, combined with **positional encodings** since transformers have no inherent sense of order.
+
+**2. Self-Attention**
+Each token computes three vectors — **Query (Q)**, **Key (K)**, **Value (V)** — and attends to all other tokens to determine relevance:
+
+```
+Attention(Q, K, V) = softmax(QKᵀ / √d_k) V
+```
+
+This lets the model weigh how much each word should "focus on" every other word in the sequence.
+
+**3. Multi-Head Attention**
+Multiple attention operations run in parallel ("heads"), each learning different relationships (syntax, semantics, coreference, etc.), then their outputs are concatenated.
+
+**4. Feed-Forward Network (FFN)**
+Each token's representation passes through a position-wise fully connected network, adding non-linear transformation capacity.
+
+**5. Residual Connections + Layer Normalization**
+Each sub-layer (attention, FFN) has a skip connection and normalization, stabilizing training in deep networks.
+
+**6. Stacking Layers**
+These blocks (attention → FFN) are stacked N times (e.g., 32, 96 layers) to build depth and representational power.
+
+## Architecture Variants
+
+| Type            | Description                | Example Use                       |
+| --------------- | -------------------------- | --------------------------------- |
+| Encoder-only    | Bidirectional attention    | BERT (classification, embeddings) |
+| Decoder-only    | Causal (masked) attention  | GPT, Claude (text generation)     |
+| Encoder-Decoder | Both, with cross-attention | T5, translation                   |
+
+Most modern LLMs use a **decoder-only** architecture: each token can only attend to previous tokens (causal masking), enabling autoregressive next-token prediction.
+
+## Output
+
+The final layer projects hidden states to a probability distribution over the vocabulary, from which the next token is sampled.
