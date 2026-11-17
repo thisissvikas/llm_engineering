@@ -104,3 +104,25 @@ Tools form the foundational building blocks of **Agentic AI** through two primar
 3. **Refine:** It adjusts its plan based on tool results until the task meets completion criteria.
 
 - **Real-World Examples:** Underpins systems like **Claude Code** and autonomous coding agents that operate independently in feedback loops.
+
+# Gradio
+
+## A bit about what Gradio actually does:
+
+1. Gradio constructs a frontend Svelte app based on our Python description of the UI
+2. Gradio starts a server built upon the Starlette web framework listening on a free port that serves this Svelte app
+3. Gradio creates backend routes for our callbacks, like chat(), which calls our functions
+
+And of course when Gradio generates the frontend app, it ensures that the the Submit button calls the right backend route.
+
+That's it!
+
+It's simple, and it has a result that feels magical.
+
+## The 3 types of Gradio UI
+
+`gr.Interface` is for standard, simple UIs
+
+`gr.ChatInterface` is for standard ChatBot UIs
+
+`gr.Blocks` is for custom UIs where you control the components and the callbacks
